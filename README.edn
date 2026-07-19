@@ -1,0 +1,7 @@
+{:schema "etzhayyim.app/readme-v1"
+ :name "auto-sales-erp"
+ :repository "etzhayyim/com-etzhayyim-app-auto-sales-erp"
+ :kind :bpmn-contract-bundle
+ :entrypoints ["wire/data-center-ops-dependency-reverse-topo.bpmn"
+               "wire/data-center-ops-operations.bpmn"]
+ :description "Auto-sales ERP BPMN contracts extracted from etzhayyim/root for independent west management."}

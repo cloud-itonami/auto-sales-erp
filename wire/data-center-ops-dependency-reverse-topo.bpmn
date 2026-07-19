@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Defs_DataCenterOps_Dependency"
+                  targetNamespace="https://etzhayyim.com/bpmn/data-center-ops/dependency">
+  <bpmn:process id="Process_DataCenterOps_DependencyReverseTopo" name="Data Center Dependency Reverse Topology" isExecutable="true">
+    <bpmn:startEvent id="Start_Dependency" name="Request Dependency View">
+      <bpmn:outgoing>Flow_D1</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <bpmn:serviceTask id="Task_SeedBaseline" name="Seed Baseline Dependencies (Lexicon: com.etzhayyim.apps.dataCenterOps.dependency.seedBaseline)">
+      <bpmn:incoming>Flow_D1</bpmn:incoming>
+      <bpmn:outgoing>Flow_D2</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_ListNodes" name="List Dependency Nodes (Lexicon: com.etzhayyim.apps.dataCenterOps.dependency.listNodes)">
+      <bpmn:incoming>Flow_D2</bpmn:incoming>
+      <bpmn:outgoing>Flow_D3</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_ListEdges" name="List Dependency Edges (Lexicon: com.etzhayyim.apps.dataCenterOps.dependency.listEdges)">
+      <bpmn:incoming>Flow_D3</bpmn:incoming>
+      <bpmn:outgoing>Flow_D4</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_CollectGlobal" name="Collect Global Dependency Topology (Lexicon: com.etzhayyim.apps.dataCenterOps.dependency.collectGlobal)">
+      <bpmn:incoming>Flow_D4</bpmn:incoming>
+      <bpmn:outgoing>Flow_D5</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_ReverseTopo" name="Resolve Reverse Topological Order (Lexicon: com.etzhayyim.apps.dataCenterOps.dependency.getReverseTopo)">
+      <bpmn:incoming>Flow_D5</bpmn:incoming>
+      <bpmn:outgoing>Flow_D6</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:endEvent id="End_Dependency" name="Dependency Graph Ready">
+      <bpmn:incoming>Flow_D6</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:sequenceFlow id="Flow_D1" sourceRef="Start_Dependency" targetRef="Task_SeedBaseline" />
+    <bpmn:sequenceFlow id="Flow_D2" sourceRef="Task_SeedBaseline" targetRef="Task_ListNodes" />
+    <bpmn:sequenceFlow id="Flow_D3" sourceRef="Task_ListNodes" targetRef="Task_ListEdges" />
+    <bpmn:sequenceFlow id="Flow_D4" sourceRef="Task_ListEdges" targetRef="Task_CollectGlobal" />
+    <bpmn:sequenceFlow id="Flow_D5" sourceRef="Task_CollectGlobal" targetRef="Task_ReverseTopo" />
+    <bpmn:sequenceFlow id="Flow_D6" sourceRef="Task_ReverseTopo" targetRef="End_Dependency" />
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_DependencyReverseTopo">
+    <bpmndi:BPMNPlane id="BPMNPlane_DependencyReverseTopo" bpmnElement="Process_DataCenterOps_DependencyReverseTopo">
+      <bpmndi:BPMNShape id="Shape_Start_Dependency" bpmnElement="Start_Dependency">
+        <dc:Bounds x="120" y="160" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_SeedBaseline" bpmnElement="Task_SeedBaseline">
+        <dc:Bounds x="210" y="138" width="230" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_ListNodes" bpmnElement="Task_ListNodes">
+        <dc:Bounds x="480" y="138" width="230" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_ListEdges" bpmnElement="Task_ListEdges">
+        <dc:Bounds x="750" y="138" width="230" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_CollectGlobal" bpmnElement="Task_CollectGlobal">
+        <dc:Bounds x="1020" y="138" width="280" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_ReverseTopo" bpmnElement="Task_ReverseTopo">
+        <dc:Bounds x="1340" y="138" width="260" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_End_Dependency" bpmnElement="End_Dependency">
+        <dc:Bounds x="1640" y="160" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNEdge id="Edge_Flow_D1" bpmnElement="Flow_D1">
+        <di:waypoint x="156" y="178" />
+        <di:waypoint x="210" y="178" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_D2" bpmnElement="Flow_D2">
+        <di:waypoint x="440" y="178" />
+        <di:waypoint x="480" y="178" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_D3" bpmnElement="Flow_D3">
+        <di:waypoint x="710" y="178" />
+        <di:waypoint x="750" y="178" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_D4" bpmnElement="Flow_D4">
+        <di:waypoint x="980" y="178" />
+        <di:waypoint x="1020" y="178" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_D5" bpmnElement="Flow_D5">
+        <di:waypoint x="1300" y="178" />
+        <di:waypoint x="1340" y="178" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_D6" bpmnElement="Flow_D6">
+        <di:waypoint x="1600" y="178" />
+        <di:waypoint x="1640" y="178" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
