@@ -1,7 +1,15 @@
 {:schema "etzhayyim.app/readme-v1"
  :name "auto-sales-erp"
- :repository "etzhayyim/com-etzhayyim-app-auto-sales-erp"
+ ;; 実在の remote。migration.edn の :destination は抽出時点(2026-07-19)の記録で、
+ ;; 現在地はこちら（履歴は migration.edn と git が持つ。ここは現在値だけを言う）。
+ :repository "cloud-itonami/auto-sales-erp"
  :kind :bpmn-contract-bundle
  :entrypoints ["wire/data-center-ops-dependency-reverse-topo.bpmn"
                "wire/data-center-ops-operations.bpmn"]
- :description "Auto-sales ERP BPMN contracts extracted from etzhayyim/root for independent west management."}
+ ;; 名前は auto-sales-erp だが中身は data-center-ops の契約（抽出元パス由来。
+ ;; 改名しないのが workspace の規則）。詳細は README.md の名乗り。
+ :description "BPMN 2.0 process contracts for the data-center-ops actor (cloud-itonami/data-center-ops), extracted from etzhayyim/root 60-apps/etzhayyim-project-auto-sales-erp. Contracts only — no runtime."
+ :docs {:readme "README.md"
+        :operator-quickstart "docs/operator-quickstart.md"}
+ :verify {:command "nbb --classpath $ROOT/orgs/kotoba-lang/org-omg-bpmn/src scripts/validate-contracts.cljs"
+          :rules-from "kotoba-lang/org-omg-bpmn (bpmn.validate)"}}

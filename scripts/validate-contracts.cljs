@@ -1,0 +1,75 @@
+#!/usr/bin/env nbb
+;; wire/*.bpmn を kotoba-lang/org-omg-bpmn で読み、構造検査を通す。
+;;
+;;   nbb --classpath "$ROOT/orgs/kotoba-lang/org-omg-bpmn/src" scripts/validate-contracts.cljs
+;;
+;; この repo は実行するコードを持たない BPMN contract bundle なので、
+;; 「壊れていない」の意味は『仕様どおり読めて、構造検査に通ること』しかない。
+;; それをこの 1 本で確かめる。error が 1 件でもあれば exit 1。
+;;
+;; 検査そのものは書かない —— 規則は org-omg-bpmn の bpmn.validate が持っている。
+;; ここが持つのは「どのファイルを対象にするか」と「落ちること」だけ。
+(ns validate-contracts
+  (:require [bpmn.xml :as xml]
+            [bpmn.validate :as v]
+            [bpmn.model :as m]
+            [clojure.string :as str]
+            ["node:fs" :as fs]
+            ["node:path" :as path]))
+
+(def repo-root
+  ;; scripts/ の 1 つ上。どこから呼ばれても wire/ を見つけられるようにする。
+  (path/resolve (path/dirname (path/dirname (js/require.resolve "./validate-contracts.cljs")))))
+
+(defn- wire-dir [] (path/join repo-root "wire"))
+
+(defn- contracts []
+  (let [d (wire-dir)]
+    (when-not (fs/existsSync d)
+      (println (str "wire/ が無い: " d))
+      (js/process.exit 1))
+    (->> (fs/readdirSync d)
+         (filter #(str/ends-with? % ".bpmn"))
+         sort
+         (mapv #(path/join d %)))))
+
+(defn- summarize [model]
+  {:id       (:bpmn/id model)
+   :name     (:bpmn/name model)
+   :nodes    (count (:bpmn/nodes model))
+   :flows    (count (:bpmn/flows model))
+   :starts   (count (m/start-events model))
+   :ends     (count (m/end-events model))
+   :services (count (m/nodes-of-type model :service-task))
+   :gateways (count (filter m/gateway? (m/nodes model)))})
+
+(defn -main []
+  (let [files (contracts)
+        _ (when (empty? files)
+            (println "wire/*.bpmn が 0 件。contract bundle が空になっている")
+            (js/process.exit 1))
+        results
+        (mapv (fn [f]
+                (let [model (xml/parse-str (fs/readFileSync f "utf8"))
+                      probs (v/problems model)
+                      errs  (v/errors model)
+                      s     (summarize model)]
+                  (println (str (path/relative repo-root f)))
+                  (println (str "  process " (:id s) "  \"" (:name s) "\""))
+                  (println (str "  nodes=" (:nodes s) " flows=" (:flows s)
+                                " start=" (:starts s) " end=" (:ends s)
+                                " service-task=" (:services s) " gateway=" (:gateways s)))
+                  (doseq [p probs]
+                    (println (str "  " (name (:bpmn/severity p))
+                                  " [" (:bpmn/code p) "] " (:bpmn/msg p))))
+                  (println (str "  " (if (seq errs) "FAIL" "OK")
+                                "  errors=" (count errs) " problems=" (count probs)))
+                  {:file f :errors (count errs)}))
+              files)
+        bad (filterv #(pos? (:errors %)) results)]
+    (println (str "\n" (count files) " contract(s), "
+                  (reduce + 0 (map :errors results)) " error(s)"))
+    (when (seq bad)
+      (js/process.exit 1))))
+
+(-main)
