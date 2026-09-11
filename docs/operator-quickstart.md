@@ -34,7 +34,7 @@ cd "$ROOT" && west update --fetch smart org-omg-bpmn
 
 ```bash
 cd <この repo>
-nbb --classpath "$ROOT/orgs/kotoba-lang/org-omg-bpmn/src" scripts/validate-contracts.cljk
+kbb --backend sci --classpath "$ROOT/orgs/kotoba-lang/org-omg-bpmn/src" scripts/validate-contracts.cljk
 ```
 
 実際の出力:
@@ -68,7 +68,7 @@ cp -r wire scripts /tmp/bpmn-falsify/
 cd /tmp/bpmn-falsify
 sed -i '' 's|targetRef="Task_EvaluateCapacity"|targetRef="Task_DoesNotExist"|' \
   wire/data-center-ops-operations.bpmn      # flow の行き先を存在しない node に向ける
-nbb --classpath "$ROOT/orgs/kotoba-lang/org-omg-bpmn/src" scripts/validate-contracts.cljk
+kbb --backend sci --classpath "$ROOT/orgs/kotoba-lang/org-omg-bpmn/src" scripts/validate-contracts.cljk
 echo "exit=$?"
 ```
 
@@ -95,7 +95,7 @@ exit=1
 
 ```bash
 mkdir -p /tmp/bpmn-empty/wire && cp -r scripts /tmp/bpmn-empty/ && cd /tmp/bpmn-empty
-nbb --classpath "$ROOT/orgs/kotoba-lang/org-omg-bpmn/src" scripts/validate-contracts.cljk
+kbb --backend sci --classpath "$ROOT/orgs/kotoba-lang/org-omg-bpmn/src" scripts/validate-contracts.cljk
 # → wire/*.bpmn が 0 件。contract bundle が空になっている   /  exit=1
 ```
 
@@ -105,7 +105,7 @@ nbb --classpath "$ROOT/orgs/kotoba-lang/org-omg-bpmn/src" scripts/validate-contr
 トポロジを引ける。分岐先を確かめる例:
 
 ```bash
-nbb --classpath "$ROOT/orgs/kotoba-lang/org-omg-bpmn/src" -e '
+kbb --backend sci --classpath "$ROOT/orgs/kotoba-lang/org-omg-bpmn/src" -e '
 (require (quote [bpmn.xml :as x]) (quote [bpmn.model :as m]) (quote ["node:fs" :as fs]))
 (let [mo (x/parse-str (fs/readFileSync "wire/data-center-ops-operations.bpmn" "utf8"))]
   (println (pr-str (m/successors mo "Gateway_Risk"))))'

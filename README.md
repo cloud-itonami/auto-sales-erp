@@ -74,7 +74,7 @@ operations 側は 6 task 中 1 つ（`Task_ResolveReverseTopo` →
 
 ```bash
 ROOT=~/github/com-junkawasaki                       # west superproject root
-nbb --classpath "$ROOT/orgs/kotoba-lang/org-omg-bpmn/src" scripts/validate-contracts.cljk
+kbb --backend sci --classpath "$ROOT/orgs/kotoba-lang/org-omg-bpmn/src" scripts/validate-contracts.cljk
 ```
 
 検査規則はこの repo が持たず、`kotoba-lang/org-omg-bpmn` の `bpmn.validate`
