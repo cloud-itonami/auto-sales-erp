@@ -11,5 +11,5 @@
  :description "BPMN 2.0 process contracts for the data-center-ops actor (cloud-itonami/data-center-ops), extracted from etzhayyim/root 60-apps/etzhayyim-project-auto-sales-erp. Contracts only — no runtime."
  :docs {:readme "README.md"
         :operator-quickstart "docs/operator-quickstart.md"}
- :verify {:command "nbb --classpath $ROOT/orgs/kotoba-lang/org-omg-bpmn/src scripts/validate-contracts.cljs"
+ :verify {:command "nbb --classpath $ROOT/orgs/kotoba-lang/org-omg-bpmn/src scripts/validate-contracts.cljk"
           :rules-from "kotoba-lang/org-omg-bpmn (bpmn.validate)"}}

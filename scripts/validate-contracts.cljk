@@ -1,7 +1,7 @@
 #!/usr/bin/env nbb
 ;; wire/*.bpmn を kotoba-lang/org-omg-bpmn で読み、構造検査を通す。
 ;;
-;;   nbb --classpath "$ROOT/orgs/kotoba-lang/org-omg-bpmn/src" scripts/validate-contracts.cljs
+;;   nbb --classpath "$ROOT/orgs/kotoba-lang/org-omg-bpmn/src" scripts/validate-contracts.cljk
 ;;
 ;; この repo は実行するコードを持たない BPMN contract bundle なので、
 ;; 「壊れていない」の意味は『仕様どおり読めて、構造検査に通ること』しかない。
