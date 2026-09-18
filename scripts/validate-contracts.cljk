@@ -19,7 +19,7 @@
 
 (def repo-root
   ;; scripts/ の 1 つ上。どこから呼ばれても wire/ を見つけられるようにする。
-  (path/resolve (path/dirname (path/dirname (js/require.resolve "./validate-contracts.cljs")))))
+  (path/resolve (path/dirname (path/dirname (js/require.resolve "./validate-contracts.cljk")))))
 
 (defn- wire-dir [] (path/join repo-root "wire"))
 
