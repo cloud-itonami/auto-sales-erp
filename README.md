@@ -7,7 +7,7 @@ BPMN 2.0 プロセス契約 2 本**である。実行するコードは 1 行も
 名前がこうなっているのは、抽出元のパスがそうだったからで（`migration.edn`:
 `etzhayyim/root` の `60-apps/etzhayyim-project-auto-sales-erp`、2026-07-19 抽出）、
 このワークスペースの規則では**移転や実態の変化で repo を改名しない**
-（名前は discovery alias であって identity ではない。superproject CLAUDE.md /
+（名前は discovery alias であって identity ではない。superproject AGENTS.md /
 ADR-2608040100）。だから名前は据え置き、代わりにここで名乗る。
 
 ## 中身
